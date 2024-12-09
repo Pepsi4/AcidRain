@@ -9,14 +9,13 @@ public class ColorStateManager : MonoBehaviour
     [Tooltip("The number of objects that need to have their color changed before the game can start.")]
     [SerializeField] private int neededColorsChangeToPlay;
 
-    private HashSet<ColorDropHandler> changedColors = new HashSet<ColorDropHandler>();
+    private List<ColorDropHandler> changedColors = new List<ColorDropHandler>();
 
     public void MarkColorChanged(ColorDropHandler element)
     {
         if (!changedColors.Contains(element))
         {
             changedColors.Add(element);
-            Debug.Log($"Color changed for {element}.");
 
             CheckPlayButtonState();
         }
@@ -27,7 +26,6 @@ public class ColorStateManager : MonoBehaviour
         if (changedColors.Count >= neededColorsChangeToPlay)
         {
             playButton.interactable = true;
-            Debug.Log("Play button activated!");
         }
     }
 }

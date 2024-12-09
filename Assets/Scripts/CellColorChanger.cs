@@ -13,7 +13,7 @@ public class CellColorChanger : MonoBehaviour
     [SerializeField] public Color NewColor = Color.red;
 
     [Header("File Settings")]
-    [SerializeField] private string texturePath = "Assets/Textures/modified_texture.png";
+    [SerializeField] private string textureName = "modified_texture.png";
 
     public void ChangeCellColor()
     {
@@ -53,7 +53,9 @@ public class CellColorChanger : MonoBehaviour
 
     private void SaveTextureToFile()
     {
+        string path = System.IO.Path.Combine(Application.persistentDataPath, textureName);
+
         byte[] textureBytes = texture.EncodeToPNG();
-        System.IO.File.WriteAllBytes(texturePath, textureBytes);
+        System.IO.File.WriteAllBytes(path, textureBytes);
     }
 }
