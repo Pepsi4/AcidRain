@@ -2,35 +2,23 @@
 
 public class Raindrop : MonoBehaviour
 {
-    private float fallSpeed;
-    private System.Action<Raindrop> returnToPool;
-
-    public void Initialize(float speed, System.Action<Raindrop> onReturn)
+    private int damage = 1;
+    private RainJobsSystem rainJobsSystem;
+    public int Index { get; private set; }
+    public void Initialize(RainJobsSystem system, int damage, int index)
     {
-        fallSpeed = speed;
-        returnToPool = onReturn;
+        rainJobsSystem = system;
+        this.damage = damage;
+        Index = index;
     }
 
-    private void Update()
+    private void OnTriggerEnter(Collider collision)
     {
-        transform.position += Vector3.down * fallSpeed * Time.deltaTime;
-
-        if (transform.position.y < -10f)
+        if (collision.TryGetComponent(out PlayerHealth playerHealth))
         {
-            returnToPool?.Invoke(this);
-        }
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            returnToPool?.Invoke(this);
-        }
-        else if (collision.gameObject.CompareTag("Shield"))
-        {
-            Vector3 slideDirection = Vector3.ProjectOnPlane(Vector3.down, collision.contacts[0].normal).normalized;
-            GetComponent<Rigidbody>().linearVelocity = slideDirection * fallSpeed;
+            playerHealth.TakeDamage(damage);
+            Debug.Log($"Player takes {damage} damage!");
+            rainJobsSystem.DisableRaindrop(Index);
         }
     }
 }

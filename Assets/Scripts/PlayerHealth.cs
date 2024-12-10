@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
 {
@@ -7,7 +8,8 @@ public class PlayerHealth : MonoBehaviour
 
     public delegate void HealthChanged(int currentHealth, int maxHealth);
     public event HealthChanged OnHealthChanged;
-
+    public Action OnDie;
+    [SerializeField] EndGamePanel endGamePanel;
     private void Start()
     {
         currentHealth = maxHealth;
@@ -38,5 +40,12 @@ public class PlayerHealth : MonoBehaviour
     private void Die()
     {
         Debug.Log("Player has died!");
+
+        if (TryGetComponent(out PlayerController playerController))
+        {
+            OnDie?.Invoke();
+            playerController.SetState(new DeadState()); // Зміна стану на Dead
+            endGamePanel.Show();
+        }
     }
 }

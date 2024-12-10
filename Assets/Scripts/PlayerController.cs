@@ -1,5 +1,7 @@
-﻿using UnityEngine;
+﻿using Unity.VisualScripting;
+using UnityEngine;
 
+[RequireComponent(typeof(Collider))]
 [RequireComponent(typeof(Animator))]
 public class PlayerController : MonoBehaviour
 {
@@ -9,12 +11,13 @@ public class PlayerController : MonoBehaviour
     // Для обертання персонажа
     public float rotationSpeed = 10f;
     private Vector3 moveDirection;
-
+    private Collider collider;
     // Для переміщення персонажа
-    [field: SerializeField]public float MoveSpeed { get; set; } = 5f;  // Швидкість руху персонажа
-
+    [field: SerializeField] public float MoveSpeed { get; set; } = 5f;  // Швидкість руху персонажа
+    private bool canMove = true;
     void Start()
     {
+        collider = GetComponent<Collider>();
         animator = GetComponent<Animator>();
         SetState(new IdleState()); // Початковий стан - Idle
     }
@@ -42,14 +45,16 @@ public class PlayerController : MonoBehaviour
 
     public Vector2 GetMoveInput()
     {
-        #if UNITY_STANDALONE || UNITY_EDITOR
-                return new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-        #endif
+#if UNITY_STANDALONE || UNITY_EDITOR
+        return new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+#endif
         return new Vector2(joystick.Horizontal, joystick.Vertical);
     }
 
     private void HandleRotation()
     {
+        if (canMove == false) return;
+
         float horizontal = GetMoveInput().x;
         float vertical = GetMoveInput().y;
 
@@ -66,6 +71,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleMovement()
     {
+        if (canMove == false) return;
         // Отримуємо напрямок руху
         Vector3 direction = new Vector3(GetMoveInput().x, 0, GetMoveInput().y).normalized;
         // Якщо є інпут, рухаємо персонажа
@@ -74,5 +80,21 @@ public class PlayerController : MonoBehaviour
             // Рух персонажа вперед
             transform.Translate(direction * MoveSpeed * Time.deltaTime, Space.World);
         }
+    }
+
+    public void DisableMovement()
+    {
+        canMove = false;
+    }
+
+    // Включає рух (можливо, вам буде потрібно викликати цей метод при виході зі стану Dead)
+    public void EnableMovement()
+    {
+        canMove = true;
+    }
+
+    public void DisableCollider()
+    {
+        collider.enabled = false;
     }
 }
