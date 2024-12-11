@@ -393,13 +393,13 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1822201128}
+  m_Father: {fileID: 1649246989}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1.8318992, y: 187.23186}
-  m_SizeDelta: {x: 57.007, y: 57.007}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: -9.4}
+  m_SizeDelta: {x: 57.007, y: 57.00699}
+  m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &55099237
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1468,9 +1468,10 @@ GameObject:
   - component: {fileID: 640835590}
   - component: {fileID: 640835589}
   - component: {fileID: 640835588}
+  - component: {fileID: 640835592}
   m_Layer: 0
   m_Name: Plane
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4
@@ -1565,6 +1566,33 @@ Transform:
   m_Children: []
   m_Father: {fileID: 664013865}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &640835592
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 640835587}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &664013864
 GameObject:
   m_ObjectHideFlags: 0
@@ -2458,6 +2486,7 @@ MonoBehaviour:
   puddleSpawner: {fileID: 479311595}
   rainConfig: {fileID: 11400000, guid: e87bebc337388a142a25bdc02edec463, type: 2}
   playerHealth: {fileID: 5260452706547142215}
+  plane: {fileID: 640835591}
 --- !u!4 &1199389099
 Transform:
   m_ObjectHideFlags: 0
@@ -2943,7 +2972,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1531472104}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 8d4a8404d3dfe344cb4948f0fd451906, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -2980,7 +3009,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 0
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -3234,6 +3263,7 @@ RectTransform:
   m_Children:
   - {fileID: 50260707}
   - {fileID: 1606939292}
+  - {fileID: 55099236}
   m_Father: {fileID: 1822201128}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -3579,7 +3609,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1649246989}
-  - {fileID: 55099236}
   m_Father: {fileID: 629336873}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -5531,7 +5560,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 0
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0

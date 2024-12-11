@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 
 public class Shield : MonoBehaviour
@@ -60,17 +59,13 @@ public class Shield : MonoBehaviour
     {
         if (isShieldActive && other.TryGetComponent(out Raindrop raindrop))
         {
-            Debug.Log("Raindrop on shield");
-            // HandleRaindropCollision(other.gameObject);
+            raindrop.EnablePhysics();
+            HandleRaindropCollision(raindrop);
         }
     }
 
-    private void HandleRaindropCollision(GameObject raindrop)
+    private void HandleRaindropCollision(Raindrop raindrop)
     {
-        Rigidbody rb = raindrop.GetComponent<Rigidbody>();
-        if (rb != null)
-        {
-            rb.linearVelocity = new Vector3(Random.Range(-1f, 1f), -1f, Random.Range(-1f, 1f)) * 2f; // Slide off effect
-        }
+        raindrop.SetLinearVelocity(new Vector3(Random.Range(-1f, 1f), -1f, Random.Range(-1f, 1f)) * 2f);
     }
 }
