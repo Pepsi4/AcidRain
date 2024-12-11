@@ -9,11 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 71dc8d218e6d2144bb5e6d40a3b6f92a, type: 3}
-  m_Name: RainConfig
+  m_Script: {fileID: 11500000, guid: a751e52ff0446c44b867f6e065c02e62, type: 3}
+  m_Name: ShieldPowerUpConfig
   m_EditorClassIdentifier: 
-  raindropCount: 1000
-  puddleCount: 25
-  spawnAreaSize: 20
-  fallSpeed: 6
-  RaindropDamage: 1
+  PowerUpPrefab: {fileID: 5707592457046256635, guid: da20876d6fbbb2249918ead41a6428b4, type: 3}
+  MinDistance: 8
+  MaxDistance: 12
+  SpawnInterval: 5
+  SpawnY: 0.5

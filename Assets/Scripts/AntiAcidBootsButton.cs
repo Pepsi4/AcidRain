@@ -35,13 +35,11 @@ public class AntiAcidBootsButton : MonoBehaviour
 
     public void OnButtonPress()
     {
-        Debug.Log("ACtivate boots");
         boots.ActivateBoost();
     }
 
     public void OnButtonRelease()
     {
-        Debug.Log("DEACtivate boots");
         boots.DeactivateBoost();
     }
 }

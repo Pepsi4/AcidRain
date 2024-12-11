@@ -7,24 +7,21 @@ using UnityEngine;
 public class RainJobsSystem : MonoBehaviour
 {
     [SerializeField] private Raindrop raindropPrefab;
+    [SerializeField] private PuddleSpawner puddleSpawner;
 
     private NativeArray<float3> raindropPositions;
     private NativeArray<bool> raindropActiveStates;
     private Transform[] raindropTransforms;
 
-    [SerializeField] RainConfig rainConfig;
-    private int raindropCount = 1000;
-    private float spawnRadius = 10f;
-    private float fallSpeed = 5f;
+    [SerializeField] private RainConfig rainConfig;
     [SerializeField] private PlayerHealth playerHealth;
-    [SerializeField] private float playerRadius = 1f;
-    [SerializeField] private int damage = 1;
-    [SerializeField] private Transform plane;
 
+    private int raindropCount;
+    private float spawnRadius;
+    private float fallSpeed;
 
     private void Start()
     {
-        // Ініціалізація масивів
         raindropCount = rainConfig.raindropCount;
         spawnRadius = rainConfig.spawnAreaSize;
         fallSpeed = rainConfig.fallSpeed;
@@ -33,11 +30,9 @@ public class RainJobsSystem : MonoBehaviour
         raindropActiveStates = new NativeArray<bool>(raindropCount, Allocator.Persistent);
         raindropTransforms = new Transform[raindropCount];
 
-
-        // Створення крапель дощу
         for (int i = 0; i < raindropCount; i++)
         {
-            Raindrop raindrop = Instantiate(raindropPrefab, this.transform);
+            Raindrop raindrop = Instantiate(raindropPrefab, transform);
             raindrop.Initialize(this, rainConfig.RaindropDamage, i);
             raindropTransforms[i] = raindrop.transform;
             ResetRaindrop(i);
@@ -52,9 +47,7 @@ public class RainJobsSystem : MonoBehaviour
             activeStates = raindropActiveStates,
             deltaTime = Time.deltaTime,
             fallSpeed = fallSpeed,
-            playerRadius = playerRadius,
-            damage = damage,
-            disappearY = plane.position.y
+            disappearY = playerHealth.transform.position.y
         };
 
         JobHandle jobHandle = moveJob.Schedule(raindropCount, 64);
@@ -68,6 +61,7 @@ public class RainJobsSystem : MonoBehaviour
             }
             else
             {
+                puddleSpawner.TrySpawnPuddle(raindropPositions[i]);
                 ResetRaindrop(i);
             }
         }
@@ -75,7 +69,6 @@ public class RainJobsSystem : MonoBehaviour
 
     public void ResetRaindrop(int index)
     {
-        // Краплі спавняться в радіусі навколо гравця
         float angle = UnityEngine.Random.Range(0f, math.PI * 2);
         float radius = UnityEngine.Random.Range(0f, spawnRadius);
 
@@ -97,12 +90,6 @@ public class RainJobsSystem : MonoBehaviour
         raindropActiveStates.Dispose();
     }
 
-    public void DisableRaindrop(int index)
-    {
-        //raindrop.gameObject.SetActive(false); // Вимикаємо об'єкт
-        raindropActiveStates[index] = false; // Повертаємо в пул
-    }
-
     [BurstCompile]
     private struct RaindropMoveJob : IJobParallelFor
     {
@@ -110,8 +97,6 @@ public class RainJobsSystem : MonoBehaviour
         public NativeArray<bool> activeStates;
         public float deltaTime;
         public float fallSpeed;
-        public float playerRadius;
-        public int damage;
         public float disappearY;
 
         public void Execute(int index)
@@ -121,7 +106,7 @@ public class RainJobsSystem : MonoBehaviour
             float3 position = positions[index];
             position.y -= fallSpeed * deltaTime;
 
-            if (position.y < 0f)
+            if (position.y < disappearY)
             {
                 activeStates[index] = false;
             }

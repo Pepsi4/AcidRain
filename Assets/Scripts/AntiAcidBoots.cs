@@ -11,12 +11,12 @@ public class AntiAcidBoots : MonoBehaviour
     [SerializeField] private AudioSource boostSound;
     [SerializeField] private GameObject dustEffect;
 
-    private bool isBoostActive = false;
+    public bool IsBoostActive { get; private set; } = false;
     private float currentCharge = 1f;
 
     private void Update()
     {
-        if (isBoostActive)
+        if (IsBoostActive)
         {
             currentCharge -= Time.deltaTime / boostDuration;
             chargeBar.fillAmount = currentCharge;
@@ -30,10 +30,10 @@ public class AntiAcidBoots : MonoBehaviour
 
     public void ActivateBoost()
     {
-        if (currentCharge > 0f && !isBoostActive)
+        if (currentCharge > 0f && !IsBoostActive)
         {
-            isBoostActive = true;
-            playerController.MoveSpeed *= speedBoost;
+            IsBoostActive = true;
+            playerController.AddSpeedModifier(speedBoost);
 
             if (boostSound != null)
                 boostSound.Play();
@@ -45,10 +45,10 @@ public class AntiAcidBoots : MonoBehaviour
 
     public void DeactivateBoost()
     {
-        if (isBoostActive)
+        if (IsBoostActive)
         {
-            isBoostActive = false;
-            playerController.MoveSpeed /= speedBoost;
+            IsBoostActive = false;
+            playerController.RemoveSpeedModifier(speedBoost);
 
             if (dustEffect != null)
                 dustEffect.SetActive(false);

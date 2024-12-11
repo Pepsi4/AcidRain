@@ -16,9 +16,8 @@ public class Raindrop : MonoBehaviour
     {
         if (collision.TryGetComponent(out PlayerHealth playerHealth))
         {
-            playerHealth.TakeDamage(damage);
-            Debug.Log($"Player takes {damage} damage!");
-            rainJobsSystem.DisableRaindrop(Index);
+            playerHealth.TakeDamage(DamageTypes.Raindrop, damage);
+            rainJobsSystem.ResetRaindrop(Index);
         }
     }
 }

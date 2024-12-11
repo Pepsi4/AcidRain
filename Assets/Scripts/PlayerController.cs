@@ -1,4 +1,5 @@
-﻿using Unity.VisualScripting;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider))]
@@ -8,34 +9,35 @@ public class PlayerController : MonoBehaviour
     private IPlayerState currentState;
     private Animator animator;
     public VirtualJoystick joystick;
-    // Для обертання персонажа
     public float rotationSpeed = 10f;
     private Vector3 moveDirection;
     private Collider collider;
-    // Для переміщення персонажа
-    [field: SerializeField] public float MoveSpeed { get; set; } = 5f;  // Швидкість руху персонажа
+    [field: SerializeField] public float BaseMoveSpeed { get; private set; } = 5f;
+    private float currentSpeed;
+    [field: SerializeField] public PowerUpMediator PowerUpMediator { get; private set; }
+    [field: SerializeField] public PlayerHealth PlayerHealth { get; private set; }
     private bool canMove = true;
     void Start()
     {
+        currentSpeed = BaseMoveSpeed;
         collider = GetComponent<Collider>();
         animator = GetComponent<Animator>();
-        SetState(new IdleState()); // Початковий стан - Idle
+        SetState(new IdleState());
     }
 
     void Update()
     {
         currentState.Handle(this);
 
-        // Якщо персонаж рухається, обертати в залежності від напрямку
         HandleRotation();
         HandleMovement();
     }
 
     public void SetState(IPlayerState newState)
     {
-        currentState?.Exit(this); // Виходимо з попереднього стану
-        currentState = newState;   // Встановлюємо новий стан
-        currentState.Enter(this);   // Заходимо в новий стан
+        currentState?.Exit(this);
+        currentState = newState;
+        currentState.Enter(this);
     }
 
     public void PlayAnimation(int animationHash)
@@ -58,12 +60,10 @@ public class PlayerController : MonoBehaviour
         float horizontal = GetMoveInput().x;
         float vertical = GetMoveInput().y;
 
-        // Якщо є рух, обертати персонажа в напрямку руху
         if (Mathf.Abs(horizontal) > 0.1f || Mathf.Abs(vertical) > 0.1f)
         {
             moveDirection = new Vector3(horizontal, 0, vertical).normalized;
 
-            // Обертання персонажа
             Quaternion toRotation = Quaternion.LookRotation(moveDirection);
             transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, Time.deltaTime * rotationSpeed);
         }
@@ -72,13 +72,10 @@ public class PlayerController : MonoBehaviour
     private void HandleMovement()
     {
         if (canMove == false) return;
-        // Отримуємо напрямок руху
         Vector3 direction = new Vector3(GetMoveInput().x, 0, GetMoveInput().y).normalized;
-        // Якщо є інпут, рухаємо персонажа
         if (direction.magnitude >= 0.01f)
         {
-            // Рух персонажа вперед
-            transform.Translate(direction * MoveSpeed * Time.deltaTime, Space.World);
+            transform.Translate(direction * currentSpeed * Time.deltaTime, Space.World);
         }
     }
 
@@ -87,7 +84,6 @@ public class PlayerController : MonoBehaviour
         canMove = false;
     }
 
-    // Включає рух (можливо, вам буде потрібно викликати цей метод при виході зі стану Dead)
     public void EnableMovement()
     {
         canMove = true;
@@ -97,4 +93,29 @@ public class PlayerController : MonoBehaviour
     {
         collider.enabled = false;
     }
+
+    private List<float> speedModifiers = new List<float> { 1f }; // Базовий коефіцієнт
+
+    public void AddSpeedModifier(float factor)
+    {
+        speedModifiers.Add(factor);
+        UpdateSpeed();
+    }
+
+    public void RemoveSpeedModifier(float factor)
+    {
+        speedModifiers.Remove(speedModifiers.First(x => x == factor));
+        UpdateSpeed();
+    }
+
+    private void UpdateSpeed()
+    {
+        float totalFactor = 1f;
+        foreach (float factor in speedModifiers)
+        {
+            totalFactor *= factor;
+        }
+        currentSpeed = BaseMoveSpeed * totalFactor;
+    }
+
 }

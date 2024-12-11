@@ -12,7 +12,6 @@ public class PowerUp : MonoBehaviour
         if (other.TryGetComponent(out PlayerController playerController))
         {
             ActivateBoost();
-            Debug.Log($"Player activated boost!");
             onTakePowerUp?.Invoke(this);
         }
     }
