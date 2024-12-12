@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ShieldPowerUpConfig
   m_EditorClassIdentifier: 
   PowerUpPrefab: {fileID: 5707592457046256635, guid: da20876d6fbbb2249918ead41a6428b4, type: 3}
-  MinDistance: 8
-  MaxDistance: 12
-  SpawnInterval: 5
+  MinDistance: 10
+  MaxDistance: 15
+  SpawnInterval: 7
   SpawnY: 0.5

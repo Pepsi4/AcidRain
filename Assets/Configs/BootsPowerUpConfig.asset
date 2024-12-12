@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BootsPowerUpConfig
   m_EditorClassIdentifier: 
   PowerUpPrefab: {fileID: -4690436475026446199, guid: 8b95a88ca8518dc44a663231bd78ec67, type: 3}
-  MinDistance: 8
-  MaxDistance: 12
-  SpawnInterval: 5
+  MinDistance: 10
+  MaxDistance: 15
+  SpawnInterval: 7
   SpawnY: 0.5
